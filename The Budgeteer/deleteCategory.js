@@ -1,8 +1,4 @@
-// These are the names of the summary sheets
-MONTHLY_SUMMARY = "Monthly Summary";
-YEARLY_SUMMARY = "Yearly Summary";
-
-function deleteBudget() {
+function deleteCategory() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
   if (!onSummarySheet(sheet.getName())) {
@@ -18,11 +14,12 @@ function deleteBudget() {
     return;
   };
 
-  showAllBudgets(false);
+  showAllCategories(false);
   var ui = SpreadsheetApp.getUi();
 
   var result = ui.alert(
-    "Are you sure you wish to delete the " + categoryToDelete + " budget? Transactions already assigned to this budget will not transfer to a new budget category.",
+    "Are you sure you wish to delete the " + categoryToDelete +
+    " category? Transactions already assigned to this category will not transfer to a new category.",
     ui.ButtonSet.YES_NO
   );
 
@@ -31,25 +28,26 @@ function deleteBudget() {
     var categoryDataSheetName = determineCategoryDataSheet(sheet);
 
     deleteCategoryFromDataSheet(categoryToDelete, categoryDataSheetName);
-    deleteBudgetFromMonthlySummary(activeRow);
-    deleteBudgetFromYearlySummary(activeRow);
+    deleteCategoryFromMonthlySummary(activeRow);
+    deleteCategoryFromYearlySummary(activeRow);
 
-    toast(true, "Successfully deleted the " + categoryToDelete + " budget.");
+    toast(true, "Successfully deleted the " + categoryToDelete + " category.");
   };
 }
 
 function deleteCategoryFromDataSheet(categoryToDelete, categoryDataSheetName) {
   var categoryDataSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(categoryDataSheetName);
-  var rowToDelete = findRowBasedOnCellContents(categoryToDelete, categoryDataSheetName, null) + 1; // Because rows are 0-indexed
+  // Because rows are 0-indexed
+  var rowToDelete = findRowBasedOnCellContents(categoryToDelete, categoryDataSheetName, null) + 1;
   categoryDataSheet.deleteRow(rowToDelete);
 }
 
-function deleteBudgetFromMonthlySummary(activeRow) {
-  var monthlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(MONTHLY_SUMMARY);
+function deleteCategoryFromMonthlySummary(activeRow) {
+  var monthlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SUMMARY_MONTHLY_SHEET_NAME);
   monthlySummarySheet.deleteRow(activeRow);
 }
 
-function deleteBudgetFromYearlySummary(activeRow) {
-  var monthlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(YEARLY_SUMMARY);
+function deleteCategoryFromYearlySummary(activeRow) {
+  var monthlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SUMMARY_YEARLY_SHEET_NAME);
   monthlySummarySheet.deleteRow(activeRow);
 }

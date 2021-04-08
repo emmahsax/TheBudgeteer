@@ -1,7 +1,3 @@
-// These are within the summary sheets
-MONTH_ROW_NUMBER = 3;
-MONTH_COLUMN_NUMBER = 12;
-
 function updateBudget() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
@@ -17,7 +13,7 @@ function updateBudget() {
     return;
   };
 
-  var month = sheet.getRange(MONTH_ROW_NUMBER, MONTH_COLUMN_NUMBER).getValue();
+  var month = sheet.getRange(SUMMARY_MONTH_ROW_NUMBER, SUMMARY_MONTH_COLUMN_NUMBER).getValue();
   var ui = SpreadsheetApp.getUi();
 
   var result = ui.prompt(
@@ -35,28 +31,11 @@ function updateBudget() {
 
     var listSheet = determineCategoryDataSheet(sheet);
     var row = findRowBasedOnCellContents(category, listSheet, null);
-    var column = lookUpMonthNumber(month);
+    var column = MONTHS.indexOf(month) + 1;
     var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(listSheet);
-    categoryData.getRange(row + 1, column + 1).setValue(text); // Add 1 for each because they are 0-indexed
+    // Add 1 for each because they are 0-indexed
+    categoryData.getRange(row + 1, column + 1).setValue(text);
 
     toast(true, "Successfully updated the budget for " + category + ".");
   };
-}
-
-function lookUpMonthNumber(monthName) {
-  var months = new Object();
-  months["January"] = 1;
-  months["February"] = 2;
-  months["March"] = 3;
-  months["April"] = 4;
-  months["May"] = 5;
-  months["June"] = 6;
-  months["July"] = 7;
-  months["August"] = 8;
-  months["September"] = 9;
-  months["October"] = 10;
-  months["November"] = 11;
-  months["December"] = 12;
-
-  return months[monthName];
 }
