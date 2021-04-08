@@ -1,4 +1,4 @@
-function refreshVisibleBudgets(toToast) {
+function refreshVisibleCategories(toToast) {
   if (toToast === undefined) {
     toToast = true;
   };
@@ -10,12 +10,12 @@ function refreshVisibleBudgets(toToast) {
     return;
   };
 
-  showAllBudgets(false);
-  hideEmptyBudgets();
-  toast(toToast, "Successfully refreshed which budget(s) are visible.");
+  showAllCategories(false);
+  hideEmptyCategories();
+  toast(toToast, "Successfully refreshed which categories are visible.");
 }
 
-function hideEmptyBudgets() {
+function hideEmptyCategories() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
   if (!onSummarySheet(sheet.getName())) {
@@ -26,22 +26,22 @@ function hideEmptyBudgets() {
   var values = rows.getValues();
 
   for (var i = 0; i < rows.getNumRows(); i++) {
-    hideRowIfEmptyBudget(sheet, values, i);
+    hideRowIfEmptyCategory(sheet, values, i);
   };
 }
 
-function hideRowIfEmptyBudget(sheet, values, index) {
-  if (emptyBudget(values[index])) {
+function hideRowIfEmptyCategory(sheet, values, index) {
+  if (emptyCategory(values[index])) {
     var row = parseInt(index) + 1; // Because rows are 0-indexed
     sheet.hideRow(sheet.getRange(row, 1)); // This should stay at 1
   };
 }
 
-function emptyBudget(row) {
+function emptyCategory(row) {
   return (
-    (row[SUMMARY_BUDGET_PLANNED_COLUMN_INDEX] === 0) &&
-    (row[SUMMARY_BUDGET_ACTUAL_COLUMN_INDEX] === 0) &&
-    (row[SUMMARY_BUDGET_DIFFERENCE_COLUMN_INDEX] === 0) &&
-    (row[SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_INDEX] != SUMMARY_BUDGET_TOTALS_TEXT)
+    (row[SUMMARY_CATEGORY_PLANNED_COLUMN_INDEX] === 0) &&
+    (row[SUMMARY_CATEGORY_ACTUAL_COLUMN_INDEX] === 0) &&
+    (row[SUMMARY_CATEGORY_DIFFERENCE_COLUMN_INDEX] === 0) &&
+    (row[SUMMARY_CATEGORY_NAME_COLUMN_INDEX] != SUMMARY_TOTALS_TEXT)
   );
 }

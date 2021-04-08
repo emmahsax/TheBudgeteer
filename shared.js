@@ -1,15 +1,15 @@
 function existingCategories() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_EXPENSE_SHEET_NAME);
   var expenses = sheet.getRange(
-    CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + CATEGORY_BUDGET_START_ROW_NUMBER + ":" +
-    CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER
+    CATEGORY_CATEGORY_NAME_COLUMN_LETTER + CATEGORY_CATEGORIES_START_ROW_NUMBER + ":" +
+    CATEGORY_CATEGORY_NAME_COLUMN_LETTER
   ).getValues();
   var validExpenseCategories = [].concat.apply([], expenses);
 
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_INCOME_SHEET_NAME);
   var income = sheet.getRange(
-    CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + CATEGORY_BUDGET_START_ROW_NUMBER + ":" +
-    CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER
+    CATEGORY_CATEGORY_NAME_COLUMN_LETTER + CATEGORY_CATEGORIES_START_ROW_NUMBER + ":" +
+    CATEGORY_CATEGORY_NAME_COLUMN_LETTER
   ).getValues();
   validIncomeCategories = [].concat.apply([], income);
 
@@ -55,7 +55,7 @@ function determineCategoryDataSheet(sheet) {
   };
 }
 
-function showAllBudgets(toToast) {
+function showAllCategories(toToast) {
   if (toToast === undefined) {
     toToast = true;
   };
@@ -73,7 +73,7 @@ function showAllBudgets(toToast) {
   var rows = sheet.getRange("A:A"); // All rows
   sheet.unhideRow(rows);
 
-  toast(toToast, "Successfully opened all hidden budget(s).");
+  toast(toToast, "Successfully opened all hidden categories.");
 }
 
 function onTransactionsSheeet(sheetName) {

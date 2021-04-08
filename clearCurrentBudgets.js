@@ -6,7 +6,7 @@ function clearCurrentBudgets() {
     return;
   };
 
-  showAllBudgets(false);
+  showAllCategories(false);
   var ui = SpreadsheetApp.getUi();
   var month = sheet.getRange(SUMMARY_MONTH_ROW_NUMBER, SUMMARY_MONTH_COLUMN_NUMBER).getValue();
 
@@ -31,5 +31,5 @@ function clearMonthBudgets(month, sheet) {
 function clearBudgetsForMonth(sheetName, column, numRows) {
   var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   // Add 1 for column because they are 0-indexed
-  categoryData.getRange(CATEGORY_BUDGET_START_ROW_NUMBER, column + 1, numRows).setValue(null);
+  categoryData.getRange(CATEGORY_CATEGORIES_START_ROW_NUMBER, column + 1, numRows).setValue(null);
 }

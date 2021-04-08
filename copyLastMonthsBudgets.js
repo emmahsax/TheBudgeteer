@@ -6,7 +6,7 @@ function copyLastMonthsBudgets() {
     return;
   };
 
-  showAllBudgets(false);
+  showAllCategories(false);
   var ui = SpreadsheetApp.getUi();
   var currentMonth = sheet.getRange(SUMMARY_MONTH_ROW_NUMBER, SUMMARY_MONTH_COLUMN_NUMBER).getValue();
   var monthIndex = MONTHS.indexOf(currentMonth);
@@ -29,8 +29,8 @@ function copyLastMonthsBudgets() {
 }
 
 function copyBudgets(pastMonth, currentMonth, sheet) {
-  var pastColumn = MONTHS.indexOf(month) + 1;
-  var currentColumn = MONTHS.indexOf(month) + 1;
+  var pastColumn = MONTHS.indexOf(pastMonth) + 1;
+  var currentColumn = MONTHS.indexOf(currentMonth) + 1;
   var numRows = sheet.getDataRange().getNumRows();
   copyBudgetsForMonth(CATEGORY_INCOME_SHEET_NAME, pastColumn, currentColumn, numRows);
   copyBudgetsForMonth(CATEGORY_EXPENSE_SHEET_NAME, pastColumn, currentColumn, numRows);
@@ -39,6 +39,6 @@ function copyBudgets(pastMonth, currentMonth, sheet) {
 function copyBudgetsForMonth(sheetName, pastColumn, currentColumn, numRows) {
   var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   // Add 1 for column because they are 0-indexed
-  var pastData = categoryData.getRange(CATEGORY_BUDGET_START_ROW_NUMBER, pastColumn + 1, numRows).getValues();
-  categoryData.getRange(CATEGORY_BUDGET_START_ROW_NUMBER, currentColumn + 1, numRows).setValues(pastData);
+  var pastData = categoryData.getRange(CATEGORY_CATEGORIES_START_ROW_NUMBER, pastColumn + 1, numRows).getValues();
+  categoryData.getRange(CATEGORY_CATEGORIES_START_ROW_NUMBER, currentColumn + 1, numRows).setValues(pastData);
 }
