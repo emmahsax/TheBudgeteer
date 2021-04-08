@@ -1,13 +1,3 @@
-// These are within the summary sheets
-MONTH_ROW_NUMBER = 3;
-MONTH_COLUMN_NUMBER = 12;
-
-// These are the names of the category data sheets
-CATEGORY_EXPENSE = "CategoryExpenseData";
-CATEGORY_INCOME = "CategoryIncomeData";
-BUDGET_START_ROW_NUMBER = 2;
-COLUMN_COUNT = 13;
-
 function clearFutureBudgets() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
@@ -18,7 +8,7 @@ function clearFutureBudgets() {
 
   showAllBudgets(false);
   var ui = SpreadsheetApp.getUi();
-  var currentMonth = sheet.getRange(MONTH_ROW_NUMBER, MONTH_COLUMN_NUMBER).getValue();
+  var currentMonth = sheet.getRange(SUMMARY_MONTH_ROW_NUMBER, SUMMARY_MONTH_COLUMN_NUMBER).getValue();
 
   var result = ui.alert(
     "Are you sure you wish to clear all budgets after " + currentMonth + "?",
@@ -37,13 +27,15 @@ function clearFutureBudgets() {
 }
 
 function clearFutureMonthsBudgets(month, sheet) {
-    var column = lookUpMonthNumber(month);
+    var column = MONTHS.indexOf(month) + 1;
     var numRows = sheet.getDataRange().getNumRows();
-    var numColumns = COLUMN_COUNT - column - 1; // Total columns - current month's column - 1
+    var numColumns = CATEGORY_SHEET_COLUMN_COUNT - column - 1; // Total columns - current month's column - 1
+    clearBudgetsForMonths(CATEGORY_INCOME_SHEET_NAME, column, numRows, numColumns);
+    clearBudgetsForMonths(CATEGORY_EXPENSE_SHEET_NAME, column, numRows, numColumns);
+}
 
-    var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_INCOME);
-    categoryData.getRange(BUDGET_START_ROW_NUMBER, column + 2, numRows, numColumns).setValue(null); // Add 2 for column because they are 0-indexed and we don't clear out current month
-
-    var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_EXPENSE);
-    categoryData.getRange(BUDGET_START_ROW_NUMBER, column + 2, numRows, numColumns).setValue(null); // Add 2 for column because they are 0-indexed and we don't clear out current month
+function clearBudgetsForMonths(sheetName, column, numRows, numColumns) {
+  var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  // Add 2 for column because they are 0-indexed and we don't clear out current month
+  categoryData.getRange(CATEGORY_BUDGET_START_ROW_NUMBER, column + 2, numRows, numColumns).setValue(null);
 }

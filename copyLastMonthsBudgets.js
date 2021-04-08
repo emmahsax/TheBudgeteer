@@ -1,12 +1,3 @@
-// These are within the summary sheets
-MONTH_ROW_NUMBER = 3;
-MONTH_COLUMN_NUMBER = 12;
-
-// These are the names of the category data sheets
-CATEGORY_EXPENSE = "CategoryExpenseData";
-CATEGORY_INCOME = "CategoryIncomeData";
-BUDGET_START_ROW_NUMBER = 2;
-
 function copyLastMonthsBudgets() {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
@@ -17,7 +8,7 @@ function copyLastMonthsBudgets() {
 
   showAllBudgets(false);
   var ui = SpreadsheetApp.getUi();
-  var currentMonth = sheet.getRange(MONTH_ROW_NUMBER, MONTH_COLUMN_NUMBER).getValue();
+  var currentMonth = sheet.getRange(SUMMARY_MONTH_ROW_NUMBER, SUMMARY_MONTH_COLUMN_NUMBER).getValue();
   var monthIndex = MONTHS.indexOf(currentMonth);
 
   if (monthIndex === 0) {
@@ -38,15 +29,16 @@ function copyLastMonthsBudgets() {
 }
 
 function copyBudgets(pastMonth, currentMonth, sheet) {
-  var pastColumn = lookUpMonthNumber(pastMonth);
-  var currentColumn = lookUpMonthNumber(currentMonth);
+  var pastColumn = MONTHS.indexOf(month) + 1;
+  var currentColumn = MONTHS.indexOf(month) + 1;
   var numRows = sheet.getDataRange().getNumRows();
+  copyBudgetsForMonth(CATEGORY_INCOME_SHEET_NAME, pastColumn, currentColumn, numRows);
+  copyBudgetsForMonth(CATEGORY_EXPENSE_SHEET_NAME, pastColumn, currentColumn, numRows);
+}
 
-  var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_INCOME);
-  var pastData = categoryData.getRange(BUDGET_START_ROW_NUMBER, pastColumn + 1, numRows).getValues(); // Add 1 for column because they are 0-indexed
-  categoryData.getRange(BUDGET_START_ROW_NUMBER, currentColumn + 1, numRows).setValues(pastData);
-
-  categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_EXPENSE);
-  pastData = categoryData.getRange(BUDGET_START_ROW_NUMBER, pastColumn + 1, numRows).getValues(); // Add 1 for column because they are 0-indexed
-  categoryData.getRange(BUDGET_START_ROW_NUMBER, currentColumn + 1, numRows).setValues(pastData);
+function copyBudgetsForMonth(sheetName, pastColumn, currentColumn, numRows) {
+  var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  // Add 1 for column because they are 0-indexed
+  var pastData = categoryData.getRange(CATEGORY_BUDGET_START_ROW_NUMBER, pastColumn + 1, numRows).getValues();
+  categoryData.getRange(CATEGORY_BUDGET_START_ROW_NUMBER, currentColumn + 1, numRows).setValues(pastData);
 }

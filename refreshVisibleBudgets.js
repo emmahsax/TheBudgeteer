@@ -1,10 +1,3 @@
-// These are within the summary sheets
-PLANNED_INDEX = 5;
-ACTUAL_INDEX = 6;
-DIFFERENCE_INDEX = 7;
-BUDGET_NAME_INDEX = 1;
-TOTALS_TEXT = "Totals";
-
 function refreshVisibleBudgets(toToast) {
   if (toToast === undefined) {
     toToast = true;
@@ -20,27 +13,6 @@ function refreshVisibleBudgets(toToast) {
   showAllBudgets(false);
   hideEmptyBudgets();
   toast(toToast, "Successfully refreshed which budget(s) are visible.");
-}
-
-function showAllBudgets(toToast) {
-  if (toToast === undefined) {
-    toToast = true;
-  };
-
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-
-  if (!onSummarySheet(sheet.getName())) {
-    toast(toToast, "This operation can only be performed on 'Summary' sheets.");
-    return;
-  };
-
-  var columns = sheet.getRange("1:1"); // All columns
-  sheet.unhideColumn(columns);
-
-  var rows = sheet.getRange("A:A"); // All rows
-  sheet.unhideRow(rows);
-
-  toast(toToast, "Successfully opened all hidden budget(s).");
 }
 
 function hideEmptyBudgets() {
@@ -66,5 +38,10 @@ function hideRowIfEmptyBudget(sheet, values, index) {
 }
 
 function emptyBudget(row) {
-  return (row[PLANNED_INDEX] === 0) && (row[ACTUAL_INDEX] === 0) && (row[DIFFERENCE_INDEX] === 0) && (row[BUDGET_NAME_INDEX] != TOTALS_TEXT);
+  return (
+    (row[SUMMARY_BUDGET_PLANNED_COLUMN_INDEX] === 0) &&
+    (row[SUMMARY_BUDGET_ACTUAL_COLUMN_INDEX] === 0) &&
+    (row[SUMMARY_BUDGET_DIFFERENCE_COLUMN_INDEX] === 0) &&
+    (row[SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_INDEX] != SUMMARY_BUDGET_TOTALS_TEXT)
+  );
 }

@@ -1,32 +1,3 @@
-EXPENSE_BUDGET_INDICATOR = "Expense"
-
-// These are the names of the summary sheets
-MONTHLY_SUMMARY = "Monthly Summary";
-YEARLY_SUMMARY = "Yearly Summary";
-
-// These are within the summary sheets
-BUDGET_CATEGORY_NAME_COLUMN = "B";
-BUDGET_CATEGORY_NAME_COLUMN_HEIGHT = 1;
-BUDGET_CATEGORY_NAME_COLUMN_NUMBER = 2;
-BUDGET_CATEGORY_NAME_COLUMN_WIDTH = 4;
-BUDGET_PLANNED_COLUMN = "F";
-BUDGET_PLANNED_COLUMN_NUMBER = 6;
-BUDGET_ACTUAL_COLUMN = "G";
-BUDGET_ACTUAL_COLUMN_NUMBER = 7;
-BUDGET_DIFFERENCE_COLUMN_NUMBER = 8;
-MONTH_CELL = "L3";
-
-// These are within the category budget data sheets
-CATEGORY_COLUMN_LETTER = "A";
-CATEGORY_COLUMN_NUMBER = 1;
-MONTH_COLUMNS_PLUS_ONE = "M";
-
-// These are within the monthly transaction sheets
-EXPENSE_TRANSACTIONS_CATEGORY = "E";
-EXPENSE_TRANSACTIONS_AMOUNT = "D";
-INCOME_TRANSACTIONS_CATEGORY = "J";
-INCOME_TRANSACTIONS_AMOUNT = "I";
-
 function createBudget() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
@@ -66,243 +37,281 @@ function addCategoryToDataSheet(newCategoryName, categoryDataSheetName) {
 
 function differenceAmount(activeRow, categoryDataSheetName) {
   if (categoryDataSheetName.includes(EXPENSE_BUDGET_INDICATOR)) {
-    return '=if(isblank($' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + '), "", ' +
-           BUDGET_PLANNED_COLUMN + activeRow + '-' + BUDGET_ACTUAL_COLUMN + activeRow + ')';
+    return '=if(isblank($' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + activeRow + '), "", ' +
+           SUMMARY_BUDGET_PLANNED_COLUMN_LETTER + activeRow + '-' +
+           SUMMARY_BUDGET_ACTUAL_COLUMN_LETTER + activeRow + ')';
   } else {
-    return '=if(isblank($' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + '), "", ' +
-           BUDGET_ACTUAL_COLUMN + activeRow + '-' + BUDGET_PLANNED_COLUMN + activeRow + ')';
+    return '=if(isblank($' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + activeRow + '), "", ' +
+           SUMMARY_BUDGET_ACTUAL_COLUMN_LETTER + activeRow + '-' +
+           SUMMARY_BUDGET_PLANNED_COLUMN_LETTER + activeRow + ')';
   }
 }
 
 function addBudgetToMonthlySummary(activeRow, newCategoryName, categoryDataSheetName) {
-  var monthlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(MONTHLY_SUMMARY);
+  var monthlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SUMMARY_MONTHLY_SHEET_NAME);
+
   monthlySummarySheet.insertRowBefore(activeRow);
+
   monthlySummarySheet.getRange(
     activeRow,
-    BUDGET_CATEGORY_NAME_COLUMN_NUMBER,
-    BUDGET_CATEGORY_NAME_COLUMN_HEIGHT,
-    BUDGET_CATEGORY_NAME_COLUMN_WIDTH
+    SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_NUMBER,
+    SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_HEIGHT,
+    SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_WIDTH
   ).mergeAcross();
-  monthlySummarySheet.getRange(activeRow, BUDGET_CATEGORY_NAME_COLUMN_NUMBER).setValue(newCategoryName);
-  monthlySummarySheet.getRange(activeRow, BUDGET_PLANNED_COLUMN_NUMBER).setFormula(monthlyBudgetAmount(activeRow, categoryDataSheetName));
-  monthlySummarySheet.getRange(activeRow, BUDGET_ACTUAL_COLUMN_NUMBER).setFormula(monthlyActualAmount(activeRow, categoryDataSheetName));
-  monthlySummarySheet.getRange(activeRow, BUDGET_DIFFERENCE_COLUMN_NUMBER).setFormula(differenceAmount(activeRow, categoryDataSheetName));
+
+  monthlySummarySheet.getRange(activeRow, SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_NUMBER).setValue(newCategoryName);
+
+  monthlySummarySheet.getRange(activeRow, SUMMARY_BUDGET_PLANNED_COLUMN_NUMBER).setFormula(
+    monthlyBudgetAmount(activeRow, categoryDataSheetName)
+  );
+
+  monthlySummarySheet.getRange(activeRow, SUMMARY_BUDGET_ACTUAL_COLUMN_NUMBER).setFormula(
+    monthlyActualAmount(activeRow, categoryDataSheetName)
+  );
+
+  monthlySummarySheet.getRange(activeRow, SUMMARY_BUDGET_DIFFERENCE_COLUMN_NUMBER).setFormula(
+    differenceAmount(activeRow, categoryDataSheetName)
+  );
 }
 
 function monthlyBudgetAmount(activeRow, categoryDataSheetName) {
   activeRow = activeRow.toString();
-  return '=if(isblank($' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + '), "",' +
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER +
-         ':$' + CATEGORY_COLUMN_LETTER + ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow +
-         ',indirect("' + categoryDataSheetName + '!$"&(substitute(address(1,MATCH($' +
-         MONTH_CELL + ',' + categoryDataSheetName + '!' + CATEGORY_COLUMN_LETTER +
-         CATEGORY_COLUMN_NUMBER + ':' + MONTH_COLUMNS_PLUS_ONE + '1,0),4),1,""))&":$"' +
-         '&((substitute(address(1,MATCH($' + MONTH_CELL + ',' + categoryDataSheetName +
-         '!' + CATEGORY_COLUMN_LETTER + CATEGORY_COLUMN_NUMBER + ':' + MONTH_COLUMNS_PLUS_ONE +
-         '1,0),4),1,""))))))';
+  return '=if(isblank($' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + activeRow + '), "",' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         ':$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',indirect("' + categoryDataSheetName + '!$"&(substitute(address(1,MATCH($' +
+         SUMMARY_MONTH_CELL + ',' + categoryDataSheetName + '!' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_NUMBER + ':' + CATEGORY_SHEET_COLUMN_LETTER + '1,0),4),1,""))&":$"' +
+         '&((substitute(address(1,MATCH($' + SUMMARY_MONTH_CELL + ',' + categoryDataSheetName +
+         '!' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_NUMBER + ':' +
+         CATEGORY_SHEET_COLUMN_LETTER + '1,0),4),1,""))))))';
 }
 
 function monthlyActualAmount(activeRow, categoryDataSheetName) {
   if (categoryDataSheetName.includes(EXPENSE_BUDGET_INDICATOR)) {
-    return '=if(isblank($' + BUDGET_CATEGORY_NAME_COLUMN + activeRow +
+    return '=if(isblank($' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + activeRow +
            '), "", ' +
-           'sumif(indirect(' + MONTH_CELL + '&"!$' + EXPENSE_TRANSACTIONS_CATEGORY +
-           ':$' + EXPENSE_TRANSACTIONS_CATEGORY + '"),$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow +
-           ',indirect(' + MONTH_CELL + '&"!$' + EXPENSE_TRANSACTIONS_AMOUNT +
-           ':$' + EXPENSE_TRANSACTIONS_AMOUNT + '")))';
+           'sumif(indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER +
+           ':$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + '"),$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ',indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER +
+           ':$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '")))';
   } else {
-    return '=if(isblank($' + BUDGET_CATEGORY_NAME_COLUMN + activeRow +
+    return '=if(isblank($' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + activeRow +
            '), "", ' +
-           'sumif(indirect(' + MONTH_CELL + '&"!$' + INCOME_TRANSACTIONS_CATEGORY +
-           ':$' + INCOME_TRANSACTIONS_CATEGORY + '"),$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow +
-           ',indirect(' + MONTH_CELL + '&"!$' + INCOME_TRANSACTIONS_AMOUNT +
-           ':$' + INCOME_TRANSACTIONS_AMOUNT + '")))';
+           'sumif(indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER +
+           ':$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + '"),$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ',indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER +
+           ':$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '")))';
   };
 }
 
 function addBudgetToYearlySummary(activeRow, newCategoryName, categoryDataSheetName) {
-  var yearlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(YEARLY_SUMMARY);
+  var yearlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SUMMARY_YEARLY_SHEET_NAME);
+
   yearlySummarySheet.insertRowBefore(activeRow);
+
   yearlySummarySheet.getRange(
     activeRow,
-    BUDGET_CATEGORY_NAME_COLUMN_NUMBER,
-    BUDGET_CATEGORY_NAME_COLUMN_HEIGHT,
-    BUDGET_CATEGORY_NAME_COLUMN_WIDTH
+    SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_NUMBER,
+    SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_HEIGHT,
+    SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_WIDTH
   ).mergeAcross();
-  yearlySummarySheet.getRange(activeRow, BUDGET_CATEGORY_NAME_COLUMN_NUMBER).setValue(newCategoryName);
-  yearlySummarySheet.getRange(activeRow, BUDGET_PLANNED_COLUMN_NUMBER).setFormula(yearlyBudgetAmount(activeRow, categoryDataSheetName));
-  yearlySummarySheet.getRange(activeRow, BUDGET_ACTUAL_COLUMN_NUMBER).setFormula(yearlyActualAmount(activeRow, categoryDataSheetName));
-  yearlySummarySheet.getRange(activeRow, BUDGET_DIFFERENCE_COLUMN_NUMBER).setFormula(differenceAmount(activeRow, categoryDataSheetName));
+
+  yearlySummarySheet.getRange(activeRow, SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_NUMBER).setValue(newCategoryName);
+
+  yearlySummarySheet.getRange(activeRow, SUMMARY_BUDGET_PLANNED_COLUMN_NUMBER).setFormula(
+    yearlyBudgetAmount(activeRow, categoryDataSheetName)
+  );
+
+  yearlySummarySheet.getRange(activeRow, SUMMARY_BUDGET_ACTUAL_COLUMN_NUMBER).setFormula(
+    yearlyActualAmount(activeRow, categoryDataSheetName)
+  );
+
+  yearlySummarySheet.getRange(activeRow, SUMMARY_BUDGET_DIFFERENCE_COLUMN_NUMBER).setFormula(
+    differenceAmount(activeRow, categoryDataSheetName)
+  );
 }
 
 function yearlyBudgetAmount(activeRow, categoryDataSheetName) {
   activeRow = activeRow.toString();
-  return '=if(isblank($' + BUDGET_CATEGORY_NAME_COLUMN + activeRow +
+  return '=if(isblank($' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + activeRow +
          '), "", sum(' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$B:$B),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$B:$B),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$C:$C),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$C:$C),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$D:$D),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$D:$D),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$E:$E),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$E:$E),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$F:$F),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$F:$F),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$G:$G),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$G:$G),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$H:$H),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$H:$H),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$I:$I),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$I:$I),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$J:$J),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$J:$J),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$K:$K),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$K:$K),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$L:$L),' +
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$L:$L),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_COLUMN_LETTER + ':$' + CATEGORY_COLUMN_LETTER +
-         ',$' + BUDGET_CATEGORY_NAME_COLUMN + activeRow + ',' + categoryDataSheetName + '!$M:$M)))';
+         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         CATEGORY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+         activeRow + ',' + categoryDataSheetName + '!$M:$M)))';
 }
 
 function yearlyActualAmount(activeRow, categoryDataSheetName) {
   if (categoryDataSheetName.includes(EXPENSE_BUDGET_INDICATOR)) {
-    return '=if(isblank($' + BUDGET_CATEGORY_NAME_COLUMN + activeRow +
+    return '=if(isblank($' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + activeRow +
            '), "", sum(' +
 
-           'sumif(January!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', January!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + ')' +
+           'sumif(January!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', January!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ')' +
 
-           ',sumif(February!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', February!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           ',sumif(February!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', February!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(March!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', March!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(March!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', March!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(April!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', April!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(April!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', April!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(May!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', May!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(May!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', May!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(June!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', June!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(June!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', June!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(July!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', July!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(July!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', July!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(August!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', August!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(August!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', August!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(September!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', September!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(September!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', September!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(October!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', October!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(October!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', October!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(November!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', November!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(November!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', November!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(December!$' + EXPENSE_TRANSACTIONS_CATEGORY + ':$' +
-           EXPENSE_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', December!$' + EXPENSE_TRANSACTIONS_AMOUNT + ':$' +
-           EXPENSE_TRANSACTIONS_AMOUNT + ')))';
+           'sumif(December!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', December!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + ')))';
   } else {
-    return '=if(isblank($' + BUDGET_CATEGORY_NAME_COLUMN + activeRow +
+    return '=if(isblank($' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER + activeRow +
            '), "",' +
 
-           'sum(sumif(January!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', January!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sum(sumif(January!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', January!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(February!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', February!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(February!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', February!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(March!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', March!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(March!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', March!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(April!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', April!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(April!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', April!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(May!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', May!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(May!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', May!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(June!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', June!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(June!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', June!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(July!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', July!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(July!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', July!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(August!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', August!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(August!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', August!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(September!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', September!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(September!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', September!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(October!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', October!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(October!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', October!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(November!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', November!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + '),' +
+           'sumif(November!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', November!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '),' +
 
-           'sumif(December!$' + INCOME_TRANSACTIONS_CATEGORY + ':$' +
-           INCOME_TRANSACTIONS_CATEGORY + ',$' + BUDGET_CATEGORY_NAME_COLUMN +
-           activeRow + ', December!$' + INCOME_TRANSACTIONS_AMOUNT + ':$' +
-           INCOME_TRANSACTIONS_AMOUNT + ')))';
+           'sumif(December!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ',$' + SUMMARY_BUDGET_CATEGORY_NAME_COLUMN_LETTER +
+           activeRow + ', December!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ':$' +
+           TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + ')))';
   };
 }
