@@ -8,6 +8,14 @@ Good luck, and have fun budgeteering!
 
 ---
 
+### Contributing
+
+To submit a feature request, bug ticket, etc, please submit an official [GitHub Issue](https://github.com/emmahsax/TheBudgeteer/issues/new).
+
+### Security Policy
+
+To report any security vulnerabilities, please view this repository's [Security Policy](https://github.com/emmahsax/TheBudgeteer/security/policy).
+
 ### Licensing
 
 For information on licensing, please see [LICENSE.md](https://github.com/emmahsax/TheBudgeteer/blob/main/LICENSE.md).
