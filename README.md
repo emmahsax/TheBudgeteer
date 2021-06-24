@@ -5,3 +5,13 @@ This is a little spreadsheet tool that I created to help myself transition to a 
 To play with this budget or to make your own copy of it, navigate to [this template spreadsheet](https://docs.google.com/spreadsheets/d/1WL3jrNnAkKRrdOqyNyWQoGA-kMxs9ndQQkAFRu2XQWA/edit?usp=sharing), and go ahead and make a copy to your Google account. To avoid duplication, I'll just leave the Instructions sheet of that template as the source of truth for all documentation and instructions.
 
 Good luck, and have fun budgeteering!
+
+---
+
+### Licensing
+
+For information on licensing, please see [LICENSE.md](https://github.com/emmahsax/TheBudgeteer/blob/main/LICENSE.md).
+
+### Code of Conduct
+
+When interacting with this repository, please follow [Contributor Covenant's Code of Conduct](https://contributor-covenant.org).
