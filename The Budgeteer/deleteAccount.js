@@ -9,7 +9,7 @@ function deleteAccount() {
   var ui = SpreadsheetApp.getUi();
 
   var result = ui.prompt(
-    "What is the name of the account you wish to delete?",
+    "What is the name of the account you wish to delete? Transactions already assigned to this account will not transfer to a new account.",
     ui.ButtonSet.OK_CANCEL
   );
 
