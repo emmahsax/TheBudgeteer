@@ -24,12 +24,12 @@ function clearCurrentBudgets() {
 function clearMonthBudgets(month, sheet) {
   var column = MONTHS.indexOf(month) + 1;
   var numRows = sheet.getDataRange().getNumRows();
-  clearBudgetsForMonth(CATEGORY_INCOME_SHEET_NAME, column, numRows);
-  clearBudgetsForMonth(CATEGORY_EXPENSE_SHEET_NAME, column, numRows);
+  clearBudgetsForMonth(DATA_INCOME_SHEET_NAME, column, numRows);
+  clearBudgetsForMonth(DATA_EXPENSE_SHEET_NAME, column, numRows);
 }
 
 function clearBudgetsForMonth(sheetName, column, numRows) {
   var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   // Add 1 for column because they are 0-indexed
-  categoryData.getRange(CATEGORY_CATEGORIES_START_ROW_NUMBER, column + 1, numRows).setValue(null);
+  categoryData.getRange(DATA_CATEGORIES_START_ROW_NUMBER, column + 1, numRows).setValue(null);
 }

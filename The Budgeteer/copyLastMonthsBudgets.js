@@ -32,13 +32,13 @@ function copyBudgets(pastMonth, currentMonth, sheet) {
   var pastColumn = MONTHS.indexOf(pastMonth) + 1;
   var currentColumn = MONTHS.indexOf(currentMonth) + 1;
   var numRows = sheet.getDataRange().getNumRows();
-  copyBudgetsForMonth(CATEGORY_INCOME_SHEET_NAME, pastColumn, currentColumn, numRows);
-  copyBudgetsForMonth(CATEGORY_EXPENSE_SHEET_NAME, pastColumn, currentColumn, numRows);
+  copyBudgetsForMonth(DATA_INCOME_SHEET_NAME, pastColumn, currentColumn, numRows);
+  copyBudgetsForMonth(DATA_EXPENSE_SHEET_NAME, pastColumn, currentColumn, numRows);
 }
 
 function copyBudgetsForMonth(sheetName, pastColumn, currentColumn, numRows) {
   var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   // Add 1 for column because they are 0-indexed
-  var pastData = categoryData.getRange(CATEGORY_CATEGORIES_START_ROW_NUMBER, pastColumn + 1, numRows).getValues();
-  categoryData.getRange(CATEGORY_CATEGORIES_START_ROW_NUMBER, currentColumn + 1, numRows).setValues(pastData);
+  var pastData = categoryData.getRange(DATA_CATEGORIES_START_ROW_NUMBER, pastColumn + 1, numRows).getValues();
+  categoryData.getRange(DATA_CATEGORIES_START_ROW_NUMBER, currentColumn + 1, numRows).setValues(pastData);
 }

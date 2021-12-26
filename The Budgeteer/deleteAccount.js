@@ -27,8 +27,8 @@ function deleteAccount() {
 }
 
 function deleteAccountFromDataSheet(accountToDelete) {
-  var accountDataSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_ACCOUNT_SHEET_NAME);
+  var accountDataSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_ACCOUNT_SHEET_NAME);
   // Because rows are 0-indexed
-  var rowToDelete = findRowBasedOnCellContents(accountToDelete, CATEGORY_ACCOUNT_SHEET_NAME, null) + 1;
+  var rowToDelete = findRowBasedOnCellContents(accountToDelete, DATA_ACCOUNT_SHEET_NAME, null) + 1;
   accountDataSheet.deleteRow(rowToDelete);
 }

@@ -20,16 +20,16 @@ function createAccount() {
   };
 }
 
-function addAccountToDataSheet(newCategoryName) {
+function addAccountToDataSheet(newAccountName) {
   var accountDataSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("AccountData");
   console.log("spreadsheet" + accountDataSheet);
   var numRows = accountDataSheet.getDataRange().getNumRows() + 1; // Because rows are 0-indexed
   accountDataSheet.insertRowBefore(numRows);
-  accountDataSheet.getRange(numRows, 1).setValue(newCategoryName);
+  accountDataSheet.getRange(numRows, 1).setValue(newAccountName);
   sortAccounts();
 }
 
 function sortAccounts() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_ACCOUNT_SHEET_NAME);
-  sheet.sort(CATEGORY_ACCOUNT_NAME_COLUMN_NUMBER, true);
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_ACCOUNT_SHEET_NAME);
+  sheet.sort(DATA_ACCOUNT_NAME_COLUMN_NUMBER, true);
 }

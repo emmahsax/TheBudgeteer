@@ -29,13 +29,13 @@ function clearFutureBudgets() {
 function clearFutureMonthsBudgets(month, sheet) {
     var column = MONTHS.indexOf(month) + 1;
     var numRows = sheet.getDataRange().getNumRows();
-    var numColumns = CATEGORY_SHEET_COLUMN_COUNT - column - 1; // Total columns - current month's column - 1
-    clearBudgetsForMonths(CATEGORY_INCOME_SHEET_NAME, column, numRows, numColumns);
-    clearBudgetsForMonths(CATEGORY_EXPENSE_SHEET_NAME, column, numRows, numColumns);
+    var numColumns = DATA_CATEGORY_SHEET_COLUMN_COUNT - column - 1; // Total columns - current month's column - 1
+    clearBudgetsForMonths(DATA_INCOME_SHEET_NAME, column, numRows, numColumns);
+    clearBudgetsForMonths(DATA_EXPENSE_SHEET_NAME, column, numRows, numColumns);
 }
 
 function clearBudgetsForMonths(sheetName, column, numRows, numColumns) {
   var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   // Add 2 for column because they are 0-indexed and we don't clear out current month
-  categoryData.getRange(CATEGORY_CATEGORIES_START_ROW_NUMBER, column + 2, numRows, numColumns).setValue(null);
+  categoryData.getRange(DATA_CATEGORIES_START_ROW_NUMBER, column + 2, numRows, numColumns).setValue(null);
 }
