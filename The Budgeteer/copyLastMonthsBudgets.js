@@ -1,5 +1,5 @@
 function copyLastMonthsBudgets() {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
   if (!onMonthlySummarySheet(sheet.getName())) {
     toast(true, "This operation can only be performed on the 'Monthly Summary' sheet.");

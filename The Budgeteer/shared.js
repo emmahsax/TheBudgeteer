@@ -20,6 +20,19 @@ function existingCategories() {
   return validCategories;
 }
 
+function existingAccounts() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_ACCOUNT_SHEET_NAME);
+  var accounts = sheet.getRange(
+    CATEGORY_ACCOUNT_NAME_COLUMN_LETTER + CATEGORY_ACCOUNTS_START_ROW_NUMBER + ":" +
+    CATEGORY_ACCOUNT_NAME_COLUMN_LETTER
+  ).getValues();
+  var validAccounts = [].concat.apply([], accounts);
+
+  return validAccounts.filter(function (el) {
+    return el != "";
+  });
+}
+
 function findRowBasedOnCellContents(contents, sheetName, requiredColumn) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   var dataRange = sheet.getDataRange();
