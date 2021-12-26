@@ -80,27 +80,29 @@ function monthlyPlannedAmount(activeRow, categoryDataSheetName) {
          'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER +
          ':$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',indirect("' + categoryDataSheetName + '!$"&(substitute(address(1,MATCH($' +
-         SUMMARY_MONTH_CELL + ',' + categoryDataSheetName + '!' + DATA_CATEGORY_NAME_COLUMN_LETTER +
-         DATA_CATEGORY_NAME_COLUMN_NUMBER + ':' + DATA_CATEGORY_SHEET_COLUMN_LETTER + '1,0),4),1,""))&":$"' +
-         '&((substitute(address(1,MATCH($' + SUMMARY_MONTH_CELL + ',' + categoryDataSheetName +
-         '!' + DATA_CATEGORY_NAME_COLUMN_LETTER + DATA_CATEGORY_NAME_COLUMN_NUMBER + ':' +
-         DATA_CATEGORY_SHEET_COLUMN_LETTER + '1,0),4),1,""))))))';
+         SUMMARY_MONTH_COLUMN + '$' + SUMMARY_MONTH_ROW + ',' + categoryDataSheetName + '!' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + DATA_CATEGORY_NAME_COLUMN_NUMBER + ':' + DATA_CATEGORY_SHEET_COLUMN_LETTER +
+         '1,0),4),1,""))&":$"' + '&((substitute(address(1,MATCH($' + SUMMARY_MONTH_COLUMN + '$' + SUMMARY_MONTH_ROW +
+         ',' + categoryDataSheetName + '!' + DATA_CATEGORY_NAME_COLUMN_LETTER + DATA_CATEGORY_NAME_COLUMN_NUMBER +
+         ':' + DATA_CATEGORY_SHEET_COLUMN_LETTER + '1,0),4),1,""))))))';
 }
 
 function monthlyActualAmount(activeRow, categoryDataSheetName) {
   if (categoryDataSheetName.includes(EXPENSE_CATEGORY_INDICATOR)) {
     return '=if(isblank($' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow +
            '), "", ' +
-           'sumif(indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER +
-           ':$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + '"),$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
-           activeRow + ',indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER +
+           'sumif(indirect(' + SUMMARY_MONTH_COLUMN + '$' + SUMMARY_MONTH_ROW + '&"!$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER +
+           '"),$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow + ',indirect(' + SUMMARY_MONTH_COLUMN +
+           '$' + SUMMARY_MONTH_ROW + '&"!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER +
            ':$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '")))';
   } else {
     return '=if(isblank($' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow +
            '), "", ' +
-           'sumif(indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER +
-           ':$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + '"),$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
-           activeRow + ',indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER +
+           'sumif(indirect(' + SUMMARY_MONTH_COLUMN + '$' + SUMMARY_MONTH_ROW + '&"!$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER +
+           '"),$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow + ',indirect(' + SUMMARY_MONTH_COLUMN +
+           '$' + SUMMARY_MONTH_ROW + '&"!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER +
            ':$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '")))';
   };
 }
