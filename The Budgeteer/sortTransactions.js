@@ -2,7 +2,7 @@ function sortTransactionsByDate() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
   if (!onTransactionsSheeet(sheet.getName())) {
-    toast(true, "This operation can only be performed on month transaction sheets.");
+    toast(true, "This operation can only be performed on monthly transaction sheets.");
     return;
   };
 
@@ -31,7 +31,7 @@ function sortTransactionsByCategory() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
   if (!onTransactionsSheeet(sheet.getName())) {
-    toast(true, "This operation can only be performed on month transaction sheets.");
+    toast(true, "This operation can only be performed on monthly transaction sheets.");
     return;
   };
 
@@ -60,7 +60,7 @@ function sortTransactionsByAccount() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
   if (!onTransactionsSheeet(sheet.getName())) {
-    toast(true, "This operation can only be performed on month transaction sheets.");
+    toast(true, "This operation can only be performed on monthly transaction sheets.");
     return;
   };
 
