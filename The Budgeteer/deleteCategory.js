@@ -10,7 +10,7 @@ function deleteCategory() {
   var categoryToDelete = sheet.getActiveCell().getValue();
 
   if (!existingCategories().includes(categoryToDelete)) {
-    toast(true, "You must highlight the cell of the category name you wish to update.");
+    toast(true, "You must highlight the cell of the category name you wish to delete.");
     return;
   };
 

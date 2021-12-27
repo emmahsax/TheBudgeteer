@@ -1,15 +1,15 @@
 function existingCategories() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_EXPENSE_SHEET_NAME);
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_EXPENSE_SHEET_NAME);
   var expenses = sheet.getRange(
-    CATEGORY_CATEGORY_NAME_COLUMN_LETTER + CATEGORY_CATEGORIES_START_ROW_NUMBER + ":" +
-    CATEGORY_CATEGORY_NAME_COLUMN_LETTER
+    DATA_CATEGORY_NAME_COLUMN_LETTER + DATA_CATEGORIES_START_ROW_NUMBER + ":" +
+    DATA_CATEGORY_NAME_COLUMN_LETTER
   ).getValues();
   var validExpenseCategories = [].concat.apply([], expenses);
 
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CATEGORY_INCOME_SHEET_NAME);
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_INCOME_SHEET_NAME);
   var income = sheet.getRange(
-    CATEGORY_CATEGORY_NAME_COLUMN_LETTER + CATEGORY_CATEGORIES_START_ROW_NUMBER + ":" +
-    CATEGORY_CATEGORY_NAME_COLUMN_LETTER
+    DATA_CATEGORY_NAME_COLUMN_LETTER + DATA_CATEGORIES_START_ROW_NUMBER + ":" +
+    DATA_CATEGORY_NAME_COLUMN_LETTER
   ).getValues();
   validIncomeCategories = [].concat.apply([], income);
 
@@ -18,6 +18,19 @@ function existingCategories() {
   });
 
   return validCategories;
+}
+
+function existingAccounts() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_ACCOUNT_SHEET_NAME);
+  var accounts = sheet.getRange(
+    DATA_ACCOUNT_NAME_COLUMN_LETTER + DATA_ACCOUNTS_START_ROW_NUMBER + ":" +
+    DATA_ACCOUNT_NAME_COLUMN_LETTER
+  ).getValues();
+  var validAccounts = [].concat.apply([], accounts);
+
+  return validAccounts.filter(function (el) {
+    return el != "";
+  });
 }
 
 function findRowBasedOnCellContents(contents, sheetName, requiredColumn) {
@@ -47,9 +60,9 @@ function determineCategoryDataSheet(sheet) {
   var activeRow = sheet.getActiveRange().getRow();
 
   if (separatingRow > activeRow) {
-    return CATEGORY_INCOME_SHEET_NAME;
+    return DATA_INCOME_SHEET_NAME;
   } else if (separatingRow < activeRow) {
-    return CATEGORY_EXPENSE_SHEET_NAME;
+    return DATA_EXPENSE_SHEET_NAME;
   } else {
     return null;
   };

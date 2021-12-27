@@ -77,30 +77,32 @@ function addCategoryToMonthlySummary(activeRow, newCategoryName, categoryDataShe
 function monthlyPlannedAmount(activeRow, categoryDataSheetName) {
   activeRow = activeRow.toString();
   return '=if(isblank($' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow + '), "",' +
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER +
-         ':$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER +
+         ':$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',indirect("' + categoryDataSheetName + '!$"&(substitute(address(1,MATCH($' +
-         SUMMARY_MONTH_CELL + ',' + categoryDataSheetName + '!' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER +
-         CATEGORY_CATEGORY_NAME_COLUMN_NUMBER + ':' + CATEGORY_SHEET_COLUMN_LETTER + '1,0),4),1,""))&":$"' +
-         '&((substitute(address(1,MATCH($' + SUMMARY_MONTH_CELL + ',' + categoryDataSheetName +
-         '!' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + CATEGORY_CATEGORY_NAME_COLUMN_NUMBER + ':' +
-         CATEGORY_SHEET_COLUMN_LETTER + '1,0),4),1,""))))))';
+         SUMMARY_MONTH_COLUMN + '$' + SUMMARY_MONTH_ROW + ',' + categoryDataSheetName + '!' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + '$' + DATA_CATEGORY_NAME_COLUMN_NUMBER + ':' + DATA_CATEGORY_SHEET_COLUMN_LETTER +
+         '$1,0),4),1,""))&":$"' + '&((substitute(address(1,MATCH($' + SUMMARY_MONTH_COLUMN + '$' + SUMMARY_MONTH_ROW +
+         ',' + categoryDataSheetName + '!' + DATA_CATEGORY_NAME_COLUMN_LETTER + '$' + DATA_CATEGORY_NAME_COLUMN_NUMBER +
+         ':' + DATA_CATEGORY_SHEET_COLUMN_LETTER + '$1,0),4),1,""))))))';
 }
 
 function monthlyActualAmount(activeRow, categoryDataSheetName) {
   if (categoryDataSheetName.includes(EXPENSE_CATEGORY_INDICATOR)) {
     return '=if(isblank($' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow +
            '), "", ' +
-           'sumif(indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER +
-           ':$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + '"),$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
-           activeRow + ',indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER +
+           'sumif(indirect(' + SUMMARY_MONTH_COLUMN + '$' + SUMMARY_MONTH_ROW + '&"!$' +
+           TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER + ':$' + TRANSACTION_EXPENSES_CATEGORY_COLUMN_LETTER +
+           '"),$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow + ',indirect(' + SUMMARY_MONTH_COLUMN +
+           '$' + SUMMARY_MONTH_ROW + '&"!$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER +
            ':$' + TRANSACTION_EXPENSES_AMOUNT_COLUMN_LETTER + '")))';
   } else {
     return '=if(isblank($' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow +
            '), "", ' +
-           'sumif(indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER +
-           ':$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + '"),$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
-           activeRow + ',indirect(' + SUMMARY_MONTH_CELL + '&"!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER +
+           'sumif(indirect(' + SUMMARY_MONTH_COLUMN + '$' + SUMMARY_MONTH_ROW + '&"!$' +
+           TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER + ':$' + TRANSACTION_INCOME_CATEGORY_COLUMN_LETTER +
+           '"),$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow + ',indirect(' + SUMMARY_MONTH_COLUMN +
+           '$' + SUMMARY_MONTH_ROW + '&"!$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER +
            ':$' + TRANSACTION_INCOME_AMOUNT_COLUMN_LETTER + '")))';
   };
 }
@@ -137,52 +139,52 @@ function yearlyPlannedAmount(activeRow, categoryDataSheetName) {
   return '=if(isblank($' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER + activeRow +
          '), "", sum(' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$B:$B),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$C:$C),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$D:$D),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$E:$E),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$F:$F),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$G:$G),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$H:$H),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$I:$I),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$J:$J),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$K:$K),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$L:$L),' +
 
-         'sumif(' + categoryDataSheetName + '!$' + CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ':$' +
-         CATEGORY_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
+         'sumif(' + categoryDataSheetName + '!$' + DATA_CATEGORY_NAME_COLUMN_LETTER + ':$' +
+         DATA_CATEGORY_NAME_COLUMN_LETTER + ',$' + SUMMARY_CATEGORY_NAME_COLUMN_LETTER +
          activeRow + ',' + categoryDataSheetName + '!$M:$M)))';
 }
 
