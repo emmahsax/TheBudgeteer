@@ -48,6 +48,6 @@ function deleteCategoryFromMonthlySummary(activeRow) {
 }
 
 function deleteCategoryFromYearlySummary(activeRow) {
-  var monthlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SUMMARY_YEARLY_SHEET_NAME);
-  monthlySummarySheet.deleteRow(activeRow);
+  var yearlySummarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SUMMARY_YEARLY_SHEET_NAME);
+  yearlySummarySheet.deleteRow(activeRow);
 }
