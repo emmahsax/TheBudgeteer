@@ -12,6 +12,8 @@ function onOpen() {
     {name: "Delete Category", functionName: "deleteCategory"},
     {name: "Create Account", functionName: "createAccount"},
     {name: "Delete Account", functionName: "deleteAccount"},
+    {name: "Clear Current Month's Transactions", functionName: "clearCurrentTransactions"},
+    {name: "Clear Future Months' Transactions", functionName: "clearFutureTransactions"},
     {name: "Sort Monthly Transactions by Date", functionName: "sortTransactionsByDate"},
     {name: "Sort Monthly Transactions by Category", functionName: "sortTransactionsByCategory"},
     {name: "Sort Monthly Transactions by Account", functionName: "sortTransactionsByAccount"}

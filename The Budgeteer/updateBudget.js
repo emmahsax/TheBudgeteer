@@ -6,10 +6,16 @@ function updateBudget() {
     return;
   };
 
-  var category = sheet.getActiveCell().getValue();
+  var currentCell = sheet.getActiveCell();
+
+  if (currentCell.getColumn() != SUMMARY_CATEGORY_NAME_COLUMN_NUMBER) {
+    var category = sheet.getRange(currentCell.getRow(), SUMMARY_CATEGORY_NAME_COLUMN_NUMBER).getValue();
+  } else {
+    var category = currentCell.getValue();
+  };
 
   if (!existingCategories().includes(category)) {
-    toast(true, "You must highlight the cell of the category name you wish to update.");
+    toast(true, "You must highlight any cell in the row of the category you wish to update.");
     return;
   };
 

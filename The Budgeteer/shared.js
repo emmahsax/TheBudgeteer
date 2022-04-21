@@ -101,6 +101,10 @@ function onMonthlySummarySheet(sheetName) {
   return sheetName.includes(SUMMARY_MONTHLY_SHEET_NAME);
 }
 
+function shortenTransactionRows(sheet, deleteCount) {
+  sheet.deleteRows(TRANSACTION_START_ROW, deleteCount);
+}
+
 function toast(toToast, message) {
   if (toToast === true) {
     SpreadsheetApp.getActiveSpreadsheet().toast(message);
