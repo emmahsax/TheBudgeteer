@@ -11,7 +11,7 @@ function updateBudget() {
   if (currentCell.getColumn() != SUMMARY_CATEGORY_NAME_COLUMN_NUMBER) {
     var category = sheet.getRange(currentCell.getRow(), SUMMARY_CATEGORY_NAME_COLUMN_NUMBER).getValue();
   } else {
-    var category = sheet.getActiveCell().getValue();
+    var category = currentCell.getValue();
   };
 
   if (!existingCategories().includes(category)) {
