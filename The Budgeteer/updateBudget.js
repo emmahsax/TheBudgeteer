@@ -36,9 +36,10 @@ function updateBudget() {
     };
 
     var listSheet = determineCategoryDataSheet(sheet);
-    var row = findRowBasedOnCellContents(category, listSheet, null);
-    var column = MONTHS.indexOf(month) + 1;
     var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(listSheet);
+    var column = MONTHS.indexOf(month) + 1;
+    var row = findRowBasedOnCellContents(category, listSheet, null);
+
     // Add 1 for each because they are 0-indexed
     categoryData.getRange(row + 1, column + 1).setValue(text);
 

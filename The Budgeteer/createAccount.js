@@ -1,3 +1,11 @@
+function addAccountToDataSheet(newAccountName) {
+  var accountDataSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("AccountData");
+  var numRows = accountDataSheet.getDataRange().getNumRows() + 1; // Because rows are 0-indexed
+  accountDataSheet.insertRowBefore(numRows);
+  accountDataSheet.getRange(numRows, 1).setValue(newAccountName);
+  sortAccounts();
+}
+
 function createAccount() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
@@ -18,15 +26,6 @@ function createAccount() {
     addAccountToDataSheet(newAccountName);
     toast(true, "Successfully created the new " + newAccountName + " account.");
   };
-}
-
-function addAccountToDataSheet(newAccountName) {
-  var accountDataSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("AccountData");
-  console.log("spreadsheet" + accountDataSheet);
-  var numRows = accountDataSheet.getDataRange().getNumRows() + 1; // Because rows are 0-indexed
-  accountDataSheet.insertRowBefore(numRows);
-  accountDataSheet.getRange(numRows, 1).setValue(newAccountName);
-  sortAccounts();
 }
 
 function sortAccounts() {

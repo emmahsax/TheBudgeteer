@@ -1,3 +1,16 @@
+function existingAccounts() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_ACCOUNT_SHEET_NAME);
+  var accounts = sheet.getRange(
+    DATA_ACCOUNT_NAME_COLUMN_LETTER + DATA_ACCOUNTS_START_ROW_NUMBER + ":" +
+    DATA_ACCOUNT_NAME_COLUMN_LETTER
+  ).getValues();
+  var validAccounts = [].concat.apply([], accounts);
+
+  return validAccounts.filter(function (el) {
+    return el != "";
+  });
+}
+
 function existingCategories() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_EXPENSE_SHEET_NAME);
   var expenses = sheet.getRange(
@@ -18,19 +31,6 @@ function existingCategories() {
   });
 
   return validCategories;
-}
-
-function existingAccounts() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_ACCOUNT_SHEET_NAME);
-  var accounts = sheet.getRange(
-    DATA_ACCOUNT_NAME_COLUMN_LETTER + DATA_ACCOUNTS_START_ROW_NUMBER + ":" +
-    DATA_ACCOUNT_NAME_COLUMN_LETTER
-  ).getValues();
-  var validAccounts = [].concat.apply([], accounts);
-
-  return validAccounts.filter(function (el) {
-    return el != "";
-  });
 }
 
 function findRowBasedOnCellContents(contents, sheetName, requiredColumn) {
@@ -89,16 +89,16 @@ function showAllCategories(toToast) {
   toast(toToast, "Successfully opened all hidden categories.");
 }
 
-function onTransactionsSheeet(sheetName) {
-  return MONTHS.includes(sheetName);
+function onMonthlySummarySheet(sheetName) {
+  return sheetName.includes(SUMMARY_MONTHLY_SHEET_NAME);
 }
 
 function onSummarySheet(sheetName) {
   return sheetName.includes(SUMMARY_SHEET_SUB_NAME);
 }
 
-function onMonthlySummarySheet(sheetName) {
-  return sheetName.includes(SUMMARY_MONTHLY_SHEET_NAME);
+function onTransactionsSheeet(sheetName) {
+  return MONTHS.includes(sheetName);
 }
 
 function shortenTransactionRows(sheet, deleteCount) {
