@@ -41,7 +41,7 @@ function refreshVisibleCategories(toToast) {
     return;
   };
 
-  hideEmptyCategories();
   showAllCategories(false);
+  hideEmptyCategories();
   toast(toToast, "Successfully refreshed which categories are visible.");
 }
