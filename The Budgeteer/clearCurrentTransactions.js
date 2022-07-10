@@ -6,8 +6,8 @@ function clearCurrentTransactions() {
     return;
   };
 
-  var ui = SpreadsheetApp.getUi();
   var month = sheet.getName();
+  var ui = SpreadsheetApp.getUi();
 
   var result = ui.alert(
     "Are you sure you wish to clear " + month + "'s transactions?",
@@ -21,8 +21,8 @@ function clearCurrentTransactions() {
 }
 
 function clearMonthTransactions(sheet) {
-  var numRows = sheet.getDataRange().getNumRows();
   var numColumns = sheet.getDataRange().getNumColumns();
+  var numRows = sheet.getDataRange().getNumRows();
   sheet.getRange(TRANSACTION_START_ROW, 1, numRows, numColumns).setValue(null);
 
   var deleteCount = sheet.getMaxRows() - 50;

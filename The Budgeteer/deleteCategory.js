@@ -6,11 +6,16 @@ function deleteCategory() {
     return;
   };
 
-  var activeRow = sheet.getActiveRange().getRow();
-  var categoryToDelete = sheet.getActiveCell().getValue();
+  var currentCell = sheet.getActiveCell();
+
+  if (currentCell.getColumn() != SUMMARY_CATEGORY_NAME_COLUMN_NUMBER) {
+    var categoryToDelete = sheet.getRange(currentCell.getRow(), SUMMARY_CATEGORY_NAME_COLUMN_NUMBER).getValue();
+  } else {
+    var categoryToDelete = currentCell.getValue();
+  };
 
   if (!existingCategories().includes(categoryToDelete)) {
-    toast(true, "You must highlight the cell of the category name you wish to delete.");
+    toast(true, "You must highlight any cell in the row of the category you wish to delete.");
     return;
   };
 

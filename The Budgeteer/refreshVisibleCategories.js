@@ -1,20 +1,3 @@
-function refreshVisibleCategories(toToast) {
-  if (toToast === undefined) {
-    toToast = true;
-  };
-
-  var activeSheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-
-  if (!onSummarySheet(activeSheet.getName())) {
-    toast(toToast, "This operation can only be performed on 'Summary' sheets.");
-    return;
-  };
-
-  showAllCategories(false);
-  hideEmptyCategories();
-  toast(toToast, "Successfully refreshed which categories are visible.");
-}
-
 function hideEmptyCategories() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
@@ -44,4 +27,21 @@ function emptyCategory(row) {
     (row[SUMMARY_CATEGORY_DIFFERENCE_COLUMN_INDEX] === 0) &&
     (row[SUMMARY_CATEGORY_NAME_COLUMN_INDEX] != SUMMARY_TOTALS_TEXT)
   );
+}
+
+function refreshVisibleCategories(toToast) {
+  if (toToast === undefined) {
+    toToast = true;
+  };
+
+  var activeSheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  if (!onSummarySheet(activeSheet.getName())) {
+    toast(toToast, "This operation can only be performed on 'Summary' sheets.");
+    return;
+  };
+
+  showAllCategories(false);
+  hideEmptyCategories();
+  toast(toToast, "Successfully refreshed which categories are visible.");
 }

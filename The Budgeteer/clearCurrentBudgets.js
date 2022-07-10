@@ -1,3 +1,9 @@
+function clearBudgetsForMonth(sheetName, column, numRows) {
+  var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  // Add 1 for column because they are 0-indexed
+  categoryData.getRange(DATA_CATEGORIES_START_ROW_NUMBER, column + 1, numRows).setValue(null);
+}
+
 function clearCurrentBudgets() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
@@ -7,8 +13,8 @@ function clearCurrentBudgets() {
   };
 
   showAllCategories(false);
-  var ui = SpreadsheetApp.getUi();
   var month = sheet.getRange(SUMMARY_MONTH_ROW_NUMBER, SUMMARY_MONTH_COLUMN_NUMBER).getValue();
+  var ui = SpreadsheetApp.getUi();
 
   var result = ui.alert(
     "Are you sure you wish to clear " + month + "'s budgets?",
@@ -24,12 +30,6 @@ function clearCurrentBudgets() {
 function clearMonthBudgets(month, sheet) {
   var column = MONTHS.indexOf(month) + 1;
   var numRows = sheet.getDataRange().getNumRows();
-  clearBudgetsForMonth(DATA_INCOME_SHEET_NAME, column, numRows);
   clearBudgetsForMonth(DATA_EXPENSE_SHEET_NAME, column, numRows);
-}
-
-function clearBudgetsForMonth(sheetName, column, numRows) {
-  var categoryData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
-  // Add 1 for column because they are 0-indexed
-  categoryData.getRange(DATA_CATEGORIES_START_ROW_NUMBER, column + 1, numRows).setValue(null);
+  clearBudgetsForMonth(DATA_INCOME_SHEET_NAME, column, numRows);
 }
