@@ -15,7 +15,7 @@ function clearFutureMonthsTransactions(currentMonth) {
     } else if (deleteCount < 0) {
       addTransactionRows(sheet, 6, (TRANSACTION_DEFAULT_ROW_COUNT - sheet.getMaxRows()));
     };
-  }
+  };
 }
 
 function clearFutureTransactions() {
