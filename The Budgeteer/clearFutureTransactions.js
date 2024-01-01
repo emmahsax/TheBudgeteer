@@ -8,9 +8,12 @@ function clearFutureMonthsTransactions(currentMonth) {
     var numRows = sheet.getDataRange().getNumRows();
     sheet.getRange(TRANSACTION_START_ROW, 1, numRows, numColumns).setValue(null);
 
-    var deleteCount = sheet.getMaxRows() - 50;
+    var deleteCount = sheet.getMaxRows() - TRANSACTION_DEFAULT_ROW_COUNT;
+
     if (deleteCount > 0) {
       shortenTransactionRows(sheet, deleteCount);
+    } else if (deleteCount < 0) {
+      addTransactionRows(sheet, 6, (TRANSACTION_DEFAULT_ROW_COUNT - sheet.getMaxRows()));
     };
   };
 }

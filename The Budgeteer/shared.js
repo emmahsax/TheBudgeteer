@@ -1,3 +1,13 @@
+function addTransactionRows(sheet, rowToDup, countToAdd) {
+  var lastColumn = sheet.getLastColumn();
+  var valuesToDuplicate = sheet.getRange(rowToDup, 1, 1, lastColumn).getValues()[0];
+
+  for (var i = 0; i < countToAdd; i++) {
+    sheet.insertRowAfter(rowToDup);
+    sheet.getRange(rowToDup + 1, 1, 1, lastColumn).setValues([valuesToDuplicate]);
+  }
+}
+
 function existingAccounts() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_ACCOUNT_SHEET_NAME);
   var accounts = sheet.getRange(
