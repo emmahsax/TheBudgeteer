@@ -105,6 +105,16 @@ function shortenTransactionRows(sheet, deleteCount) {
   sheet.deleteRows(TRANSACTION_START_ROW, deleteCount);
 }
 
+function addTransactionRows(sheet, rowToDup, countToAdd) {
+  var lastColumn = sheet.getLastColumn();
+  var valuesToDuplicate = sheet.getRange(rowToDup, 1, 1, lastColumn).getValues()[0];
+
+  for (var i = 0; i < countToAdd; i++) {
+    sheet.insertRowAfter(rowToDup);
+    sheet.getRange(rowToDup + 1, 1, 1, lastColumn).setValues([valuesToDuplicate]);
+  }
+}
+
 function toast(toToast, message) {
   if (toToast === true) {
     SpreadsheetApp.getActiveSpreadsheet().toast(message);
