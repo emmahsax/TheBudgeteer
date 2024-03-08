@@ -1,4 +1,4 @@
-name: Test
+name: GitLeaks
 
 on:
   pull_request:
